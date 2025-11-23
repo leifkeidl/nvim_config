@@ -25,6 +25,7 @@ return {
             "javascript", "typescript",
             "javascriptreact", "typescriptreact",
             "python",
+            "ruby"
         }
 
         ---------------------------------------------------------------------
@@ -124,6 +125,7 @@ return {
                 "eslint",
                 "pyright",       -- Python
                 "rust_analyzer", -- Rust
+                "ruby_lsp",
             },
 
             handlers = {
