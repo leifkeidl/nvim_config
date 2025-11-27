@@ -18,7 +18,6 @@ local function enable_transparency()
     end
 end
 
-
 local function save_theme(name)
     local f = io.open(theme_file, "w")
     if f then
@@ -41,7 +40,6 @@ local function apply_colorscheme(name, save)
     if not name or name == "" then return end
     if save == nil then save = true end
 
-    -- Apply theme safely
     local ok = pcall(vim.cmd.colorscheme, name)
     if not ok then return end
 
@@ -56,7 +54,6 @@ local function apply_colorscheme(name, save)
     if ok_lualine then
         local lualine_theme = "auto"
 
-        -- Only set lualine theme if it exists
         if pcall(require, "lualine.themes." .. name) then
             lualine_theme = name
         end
@@ -69,24 +66,44 @@ local function apply_colorscheme(name, save)
     end
 end
 
--- Global for Telescope
+-- Global for Telescope / anything else
 _G.ApplyColorScheme = apply_colorscheme
 
 return {
+    -------------------------------------------------------------------------
+    -- COLORSCHEME PLUGINS (ALL EAGERLY LOADED)
+    -------------------------------------------------------------------------
     {
         "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
         config = function()
             local saved = load_saved_theme()
             apply_colorscheme(saved or "tokyonight", false)
         end,
     },
+
+    { "catppuccin/nvim",      name = "catppuccin",      lazy = false, priority = 900 },
+    { "ellisonleao/gruvbox.nvim",                       lazy = false, priority = 900 },
+    { "rose-pine/neovim",     name = "rose-pine",       lazy = false, priority = 900 },
+    { "rebelot/kanagawa.nvim",                         lazy = false, priority = 900 },
+    { "EdenEast/nightfox.nvim",                        lazy = false, priority = 900 },
+    { "navarasu/onedark.nvim",                         lazy = false, priority = 900 },
+    { "shaunsingh/nord.nvim",                          lazy = false, priority = 900 },
+    { "nyoom-engineering/oxocarbon.nvim",              lazy = false, priority = 900 },
+
+    -------------------------------------------------------------------------
+    -- LUALINE
+    -------------------------------------------------------------------------
     {
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
         },
+        lazy = false,
         opts = {
-            theme = "tokyonight", -- overridden by apply_colorscheme
+            theme = "auto", -- overridden by apply_colorscheme
         },
     },
 }
+

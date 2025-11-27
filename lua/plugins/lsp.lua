@@ -17,40 +17,6 @@ return {
 
     config = function()
         ---------------------------------------------------------------------
-        -- FORMAT-ON-SAVE FILETYPES
-        ---------------------------------------------------------------------
-        local autoformat_filetypes = {
-            "lua",
-            "c", "cpp",
-            "javascript", "typescript",
-            "javascriptreact", "typescriptreact",
-            "python",
-            "ruby"
-        }
-
-        ---------------------------------------------------------------------
-        -- FORMAT ON SAVE
-        ---------------------------------------------------------------------
-        vim.api.nvim_create_autocmd('LspAttach', {
-            callback = function(args)
-                local client = vim.lsp.get_client_by_id(args.data.client_id)
-                if not client then return end
-                if vim.tbl_contains(autoformat_filetypes, vim.bo.filetype) then
-                    vim.api.nvim_create_autocmd("BufWritePre", {
-                        buffer = args.buf,
-                        callback = function()
-                            vim.lsp.buf.format({
-                                formatting_options = { tabSize = 4, insertSpaces = true },
-                                bufnr = args.buf,
-                                id = client.id,
-                            })
-                        end
-                    })
-                end
-            end
-        })
-
-        ---------------------------------------------------------------------
         -- UI / DIAGNOSTICS
         ---------------------------------------------------------------------
         vim.lsp.handlers['textDocument/hover'] =
@@ -104,9 +70,15 @@ return {
                 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
 
                 vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, opts)
-                vim.keymap.set({ 'n', 'x' }, '<F3>',
+
+                -- Manual LSP format (alternative to <leader>kf)
+                vim.keymap.set(
+                    { 'n', 'x' },
+                    '<F3>',
                     function() vim.lsp.buf.format({ async = true }) end,
-                    opts)
+                    opts
+                )
+
                 vim.keymap.set('n', '<F4>', vim.lsp.buf.code_action, opts)
             end,
         })
@@ -137,7 +109,7 @@ return {
                 end,
 
                 -----------------------------------------------------------------
-                -- LUA SETUP (corrected from your broken "luals")
+                -- LUA SETUP
                 -----------------------------------------------------------------
                 lua_ls = function()
                     require("lspconfig").lua_ls.setup({
@@ -195,19 +167,21 @@ return {
             },
 
             mapping = cmp.mapping.preset.insert({
-                ['<CR>'] = cmp.mapping.confirm({ select = false }),
-                ['<C-f>'] = cmp.mapping.scroll_docs(5),
-                ['<C-u>'] = cmp.mapping.scroll_docs(-5),
+                ['<CR>']    = cmp.mapping.confirm({ select = false }),
+                ['<C-f>']   = cmp.mapping.scroll_docs(5),
+                ['<C-u>']   = cmp.mapping.scroll_docs(-5),
 
-                ['<C-e>'] = cmp.mapping(function()
+                ['<C-e>']   = cmp.mapping(function()
                     if cmp.visible() then cmp.abort() else cmp.complete() end
                 end),
 
-                ['<Tab>'] = cmp.mapping(function(fallback)
+                ['<Tab>']   = cmp.mapping(function(fallback)
                     local col = vim.fn.col('.') - 1
                     if cmp.visible() then
                         cmp.select_next_item({ behavior = 'select' })
-                    elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+                    elseif col == 0
+                        or vim.fn.getline('.'):sub(col, col):match('%s')
+                    then
                         fallback()
                     else
                         cmp.complete()
@@ -217,7 +191,7 @@ return {
                 ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
 
                 -- Snippet jumps
-                ['<C-d>'] = cmp.mapping(function(fallback)
+                ['<C-d>']   = cmp.mapping(function(fallback)
                     if require('luasnip').jumpable(1) then
                         require('luasnip').jump(1)
                     else
@@ -225,7 +199,7 @@ return {
                     end
                 end, { 'i', 's' }),
 
-                ['<C-b>'] = cmp.mapping(function(fallback)
+                ['<C-b>']   = cmp.mapping(function(fallback)
                     if require('luasnip').jumpable(-1) then
                         require('luasnip').jump(-1)
                     else

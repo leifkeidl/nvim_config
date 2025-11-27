@@ -48,44 +48,46 @@ return {
         ---------------------------------------------------------------------
         -- Color Picker
         ---------------------------------------------------------------------
-        local function colorscheme_picker()
-            pickers.new({}, {
-                prompt_title = "Colorschemes",
-                finder = finders.new_table(schemes),
-                sorter = conf.generic_sorter({}),
-                attach_mappings = function(prompt_bufnr, map)
-                    local function apply(close_after, save)
-                        local entry = action_state.get_selected_entry()
-                        if not entry then return end
-                        local name = entry[1]
+local function colorscheme_picker()
+    local schemes = vim.fn.getcompletion("", "color")
 
-                        if _G.ApplyColorScheme then
-                            _G.ApplyColorScheme(name, save)
-                        else
-                            pcall(vim.cmd.colorscheme, name)
-                        end
+    pickers.new({}, {
+        prompt_title = "Colorschemes",
+        finder = finders.new_table(schemes),
+        sorter = conf.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, map)
+            local function apply(close_after, save)
+                local entry = action_state.get_selected_entry()
+                if not entry then return end
+                local name = entry[1]
 
-                        if close_after then
-                            actions.close(prompt_bufnr)
-                        end
-                    end
+                if _G.ApplyColorScheme then
+                    _G.ApplyColorScheme(name, save)
+                else
+                    pcall(vim.cmd.colorscheme, name)
+                end
 
-                    -- Enter = apply temporarily (NO SAVE)
-                    map("i", "<CR>", function() apply(true, false) end)
-                    map("n", "<CR>", function() apply(true, false) end)
+                if close_after then
+                    actions.close(prompt_bufnr)
+                end
+            end
 
-                    -- Ctrl+p = preview (keeps picker open)
-                    map("i", "<C-p>", function() apply(false, false) end)
-                    map("n", "<C-p>", function() apply(false, false) end)
+            map("i", "<CR>", function() apply(true, false) end)
+            map("n", "<CR>", function() apply(true, false) end)
 
-                    -- Ctrl+s = apply AND SAVE as default
-                    map("i", "<C-s>", function() apply(true, true) end)
-                    map("n", "<C-s>", function() apply(true, true) end)
+            map("i", "<C-p>", function() apply(false, false) end)
+            map("n", "<C-p>", function() apply(false, false) end)
 
-                    return true
-                end,
-            }):find()
-        end
+            map("i", "<C-s>", function() apply(true, true) end)
+            map("n", "<C-s>", function() apply(true, true) end)
+
+            return true
+        end,
+    }):find()
+end
+
+vim.keymap.set("n", "<leader>yc", colorscheme_picker, { desc = "Telescope colorschemes" })
+                      
 
         -- YOUR KEYBIND: Change "tc" to "yc" if you want
         vim.keymap.set("n", "<leader>yc", colorscheme_picker, { desc = "Telescope colorschemes" })
