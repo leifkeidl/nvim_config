@@ -55,7 +55,7 @@ Plug('hrsh7th/cmp-path')           -- filesystem paths
 Plug('saadparwaiz1/cmp_luasnip')   -- connect cmp to LuaSnip
 Plug('L3MON4D3/LuaSnip')           -- snippets
 Plug('rafamadriz/friendly-snippets') -- prebuilt snippets
-
+Plug('nvim-telescope/telescope.nvim')
 
 vim.call('plug#end')
 
@@ -86,6 +86,7 @@ require("plugins.typr")
 require("plugins.harpoon")
 require("plugins.formatter")
 require("plugins.cmp")
+require("plugins.telescope")
 
 vim.defer_fn(function() 
 		--defer non-essential configs,
