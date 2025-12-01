@@ -1,86 +1,105 @@
 -- lua/plugins/lsp.lua
--- Minimal LSP setup using vim.lsp.config / vim.lsp.enable
--- Depends on nvim-lspconfig plugin definitions.
 
-if not vim.lsp or not vim.lsp.enable or not vim.lsp.config then
-  return
-end
+-- capabilities for nvim-cmp
+local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
--- Global LSP keymaps via LspAttach
+---------------------------------------------------------------------------
+-- Global diagnostic config
+---------------------------------------------------------------------------
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+})
+
+---------------------------------------------------------------------------
+-- Common keymaps for ALL LSPs, set on LspAttach (new recommended style)
+---------------------------------------------------------------------------
 vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(ev)
-    local bufnr = ev.buf
-    local opts = { buffer = bufnr, silent = true }
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not client then return end
 
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-    vim.keymap.set("n", "K",  vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    local opts = { buffer = bufnr, noremap = true, silent = true }
+
+    local map = vim.keymap.set
+    map("n", "gd", vim.lsp.buf.definition, opts)
+    map("n", "gr", vim.lsp.buf.references, opts)
+    map("n", "K",  vim.lsp.buf.hover, opts)
+    map("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    map("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    map("n", "[d", vim.diagnostic.goto_prev, opts)
+    map("n", "]d", vim.diagnostic.goto_next, opts)
+    map("n", "<leader>lf", function()
+      vim.lsp.buf.format({ async = true })
+    end, opts)
+
+    -- Rust-only tweaks
+    if client.name == "rust_analyzer" then
+      -- Hover actions / diagnostic float at cursor
+      map("n", "<leader>rd", function()
+        vim.diagnostic.open_float(nil, { scope = "cursor" })
+      end, opts)
+    end
   end,
 })
 
-
--- TypeScript / JavaScript / JSX / TSX
-vim.lsp.config("ts_ls", {
-  -- cmd = { "typescript-language-server", "--stdio" }, -- default
-  -- You could add settings here later if you want
-})
-
--- Python
+---------------------------------------------------------------------------
+-- PYTHON: pyright
+---------------------------------------------------------------------------
 vim.lsp.config("pyright", {
+  capabilities = cmp_capabilities,
   settings = {
     python = {
       analysis = {
         autoSearchPaths = true,
-        diagnosticMode = "workspace",
-        typeCheckingMode = "basic", -- or "strict"
         useLibraryCodeForTypes = true,
-      }
-    }
-  }
+        diagnosticMode = "openFilesOnly",
+      },
+    },
+  },
 })
 
--- Rust
+---------------------------------------------------------------------------
+-- RUST: rust-analyzer
+---------------------------------------------------------------------------
 vim.lsp.config("rust_analyzer", {
-  -- Example of a common tweak:
-  -- settings = {
-  --   ["rust-analyzer"] = {
-  --     cargo = { allFeatures = true },
-  --   },
-  -- },
+  capabilities = cmp_capabilities,
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+      },
+      checkOnSave = {
+        command = "clippy",  -- better diagnostics than plain `check`
+      },
+      procMacro = {
+        enable = true,
+      },
+      inlayHints = {
+        enable = true,
+      },
+    },
+  },
 })
 
--- C / C++
-vim.lsp.config("clangd", {
-  -- cmd = { "clangd" },
+---------------------------------------------------------------------------
+-- (Optional) Neovim Lua config LSP
+---------------------------------------------------------------------------
+vim.lsp.config("lua_ls", {
+  capabilities = cmp_capabilities,
+  settings = {
+    Lua = {
+      diagnostics = { globals = { "vim" } },
+      workspace = { checkThirdParty = false },
+    },
+  },
 })
 
--- Java
-vim.lsp.config("jdtls", {
-  -- jdtls is obnoxious to configure fully; this minimal
-  -- setup works as long as `jdtls` is on PATH.
-})
-
-vim.lsp.enable({
-  "ts_ls",         -- js, jsx, ts, tsx
-  "pyright",       -- python
-  "rust_analyzer", -- rust
-  "clangd",        -- c / c++
-  "jdtls",         -- java
-})
-
--- Global diagnostic UI settings
-vim.diagnostic.config({
-  virtual_text = true,      -- inline text next to the error
-  signs = true,             -- symbols in the signcolumn
-  underline = true,         -- underline the bad code
-  update_in_insert = false, -- don't spam while typing
-  severity_sort = true,
-})
-
--- Diagnostic keymaps
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { silent = true })
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev,         { silent = true })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next,         { silent = true })
+---------------------------------------------------------------------------
+-- Enable the servers (this actually turns them on)
+---------------------------------------------------------------------------
+vim.lsp.enable({ "pyright", "rust_analyzer", "lua_ls" })
 

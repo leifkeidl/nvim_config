@@ -39,7 +39,23 @@ Plug('ron-rs/ron.vim') --ron syntax highlighting
 Plug('MeanderingProgrammer/render-markdown.nvim') --render md inline
 Plug('emmanueltouzery/decisive.nvim') --view csv files
 Plug('folke/twilight.nvim') --surrounding dim
-Plug('neovim/nvim-lspconfig') --lsp
+Plug ('nvzone/volt') --typr
+Plug ('nvzone/typr') --typr
+Plug ('nvim-lua/plenary.nvim') --harpoon
+Plug ('ThePrimeagen/harpoon') --harpoon
+Plug ('stevearc/conform.nvim') --harpoon
+--Plug 'VonHeikemen/lsp-zero.nvim'
+--Plug 'williamboman/mason.nvim'
+--Plug 'williamboman/mason-lspconfig.nvim'
+Plug('neovim/nvim-lspconfig')      -- you already have this
+Plug('hrsh7th/nvim-cmp')           -- completion UI
+Plug('hrsh7th/cmp-nvim-lsp')       -- LSP completion source
+Plug('hrsh7th/cmp-buffer')         -- buffer words
+Plug('hrsh7th/cmp-path')           -- filesystem paths
+Plug('saadparwaiz1/cmp_luasnip')   -- connect cmp to LuaSnip
+Plug('L3MON4D3/LuaSnip')           -- snippets
+Plug('rafamadriz/friendly-snippets') -- prebuilt snippets
+
 
 vim.call('plug#end')
 
@@ -66,6 +82,10 @@ require("plugins.render-markdown")
 -- require("plugins.treesitter")
 -- require("plugins.twilight")
 -- require("plugins.which-key")
+require("plugins.typr")
+require("plugins.harpoon")
+require("plugins.formatter")
+require("plugins.cmp")
 
 vim.defer_fn(function() 
 		--defer non-essential configs,

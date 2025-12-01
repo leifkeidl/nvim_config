@@ -9,6 +9,8 @@ map("", "<Space>", "<Nop>")
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- format
+
 -- lint
 vim.keymap.set("n", "<leader>L", function() require("lint").try_lint()
 end, { desc = "Run lint" })
