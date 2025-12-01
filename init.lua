@@ -39,6 +39,7 @@ Plug('ron-rs/ron.vim') --ron syntax highlighting
 Plug('MeanderingProgrammer/render-markdown.nvim') --render md inline
 Plug('emmanueltouzery/decisive.nvim') --view csv files
 Plug('folke/twilight.nvim') --surrounding dim
+Plug('neovim/nvim-lspconfig') --lsp
 
 vim.call('plug#end')
 
@@ -51,6 +52,7 @@ require("config.autocmd")
 require("plugins.alpha")
 -- require("plugins.autopairs")
 require("plugins.barbar")
+require("plugins.lsp")
 require("plugins.colorizer")
 require("plugins.colorscheme")
 require("plugins.comment")
