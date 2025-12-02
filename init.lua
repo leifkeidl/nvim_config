@@ -24,7 +24,7 @@ Plug('uZer/pywal16.nvim', { [ 'as' ] = 'pywal16' }) --or, pywal colorscheme
 Plug('nvim-lualine/lualine.nvim') --statusline
 Plug('nvim-tree/nvim-web-devicons') --pretty icons
 Plug('folke/which-key.nvim') --mappings popup
-Plug('romgrk/barbar.nvim') --bufferline
+--Plug('romgrk/barbar.nvim') --bufferline
 Plug('goolord/alpha-nvim') --pretty startup
 Plug('nvim-treesitter/nvim-treesitter') --improved syntax
 Plug('mfussenegger/nvim-lint') --async linter
@@ -67,7 +67,7 @@ require("config.autocmd")
 
 require("plugins.alpha")
 -- require("plugins.autopairs")
-require("plugins.barbar")
+--require("plugins.barbar")
 require("plugins.lsp")
 require("plugins.colorizer")
 require("plugins.colorscheme")

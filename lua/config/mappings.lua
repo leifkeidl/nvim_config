@@ -62,6 +62,7 @@ map("n", "<leader>G", ":lua require('fzf-lua').grep_cword()<CR>") --grep word un
 -- misc
 map("n", "<leader>s", ":%s//g<Left><Left>") --replace all
 map("n", "<leader>t", ":NvimTreeToggle<CR>") --open file explorer
+map("n", "<leader>e", ":Ex<CR>")
 -- Telescope colorscheme picker
 map("n", "<leader>p", function()
   local ok, builtin = pcall(require, "telescope.builtin")
