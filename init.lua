@@ -56,7 +56,8 @@ Plug('saadparwaiz1/cmp_luasnip')   -- connect cmp to LuaSnip
 Plug('L3MON4D3/LuaSnip')           -- snippets
 Plug('rafamadriz/friendly-snippets') -- prebuilt snippets
 Plug('nvim-telescope/telescope.nvim')
-
+Plug 'MunifTanjim/nui.nvim' --ascii
+Plug 'MaximilianLloyd/ascii.nvim' --ascii
 vim.call('plug#end')
 
 -- move config and plugin config to alternate files
