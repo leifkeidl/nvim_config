@@ -37,6 +37,7 @@ map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>')
 map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>')
 map('n', '<A-0>', '<Cmd>BufferLast<CR>')
 map('n', '<A-p>', '<Cmd>BufferPin<CR>')
+map("n", "<leader>bo", "<Cmd>BufferCloseAllButCurrent<CR>")  -- keep only this buffer
 
 -- windows - ctrl nav, fn resize
 map("n", "<C-h>", "<C-w>h")
