@@ -4,14 +4,19 @@
 local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 ---------------------------------------------------------------------------
--- Global diagnostic config
+-- Global diagnostic config (stricter + more visual)
 ---------------------------------------------------------------------------
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = {
+    prefix = "●", -- nicer symbol for inline diagnostics
+    severity = { min = vim.diagnostic.severity.HINT },
+  },
   signs = true,
   underline = true,
   update_in_insert = false,
+  severity_sort = true,
 })
+
 
 ---------------------------------------------------------------------------
 -- Common keymaps for ALL LSPs, set on LspAttach (new recommended style)
@@ -65,15 +70,32 @@ vim.lsp.config("pyright", {
 ---------------------------------------------------------------------------
 -- RUST: rust-analyzer
 ---------------------------------------------------------------------------
+
 vim.lsp.config("rust_analyzer", {
   capabilities = cmp_capabilities,
   settings = {
     ["rust-analyzer"] = {
       cargo = {
         allFeatures = true,
+        loadOutDirsFromCheck = true,
+        runBuildScripts = true,
       },
+      -- Run clippy on save with aggressive lints
       checkOnSave = {
-        command = "clippy",  -- better diagnostics than plain `check`
+        enable = true,
+        command = "clippy",
+        extraArgs = {
+          "--",
+          "--no-deps",
+          "-Dclippy::correctness",
+          "-Dclippy::complexity",
+          "-Wclippy::perf",
+          "-Wclippy::pedantic",
+        },
+      },
+      diagnostics = {
+        enable = true,
+        enableExperimental = true,
       },
       procMacro = {
         enable = true,
