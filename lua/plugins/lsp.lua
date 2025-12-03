@@ -8,7 +8,7 @@ local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 ---------------------------------------------------------------------------
 vim.diagnostic.config({
   virtual_text = {
-    prefix = "●", -- nicer symbol for inline diagnostics
+    prefix = "●", -- inline diagnostic symbol
     severity = { min = vim.diagnostic.severity.HINT },
   },
   signs = true,
@@ -17,9 +17,8 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
-
 ---------------------------------------------------------------------------
--- Common keymaps for ALL LSPs, set on LspAttach (new recommended style)
+-- Common keymaps for ALL LSPs, set on LspAttach
 ---------------------------------------------------------------------------
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
@@ -28,8 +27,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     if not client then return end
 
     local opts = { buffer = bufnr, noremap = true, silent = true }
-
     local map = vim.keymap.set
+
     map("n", "gd", vim.lsp.buf.definition, opts)
     map("n", "gr", vim.lsp.buf.references, opts)
     map("n", "K",  vim.lsp.buf.hover, opts)
@@ -43,7 +42,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     -- Rust-only tweaks
     if client.name == "rust_analyzer" then
-      -- Hover actions / diagnostic float at cursor
       map("n", "<leader>rd", function()
         vim.diagnostic.open_float(nil, { scope = "cursor" })
       end, opts)
@@ -70,7 +68,6 @@ vim.lsp.config("pyright", {
 ---------------------------------------------------------------------------
 -- RUST: rust-analyzer
 ---------------------------------------------------------------------------
-
 vim.lsp.config("rust_analyzer", {
   capabilities = cmp_capabilities,
   settings = {
@@ -80,7 +77,6 @@ vim.lsp.config("rust_analyzer", {
         loadOutDirsFromCheck = true,
         runBuildScripts = true,
       },
-      -- Run clippy on save with aggressive lints
       checkOnSave = {
         enable = true,
         command = "clippy",
@@ -108,17 +104,46 @@ vim.lsp.config("rust_analyzer", {
 })
 
 ---------------------------------------------------------------------------
--- JAVASCRIPT / TYPESCRIPT: tsserver (ts_ls)
+-- JAVASCRIPT / JSX (+ TS/TSX if you ever use it): ts_ls
 ---------------------------------------------------------------------------
 vim.lsp.config("ts_ls", {
   capabilities = cmp_capabilities,
-  -- You can override filetypes if you want, but ts_ls already includes ts/tsx/js/jsx.
-  -- filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+
+  -- make sure it actually attaches to JS/JSX files
+  filetypes = {
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+  },
+
+  settings = {
+    -- tighten checks for plain JS/JSX
+    javascript = {
+      suggest = {
+        autoImports = true,
+      },
+      implicitProjectConfig = {
+        checkJs = true,        -- type-check JS
+        strictNullChecks = true,
+      },
+    },
+    -- if you ever touch TS/TSX this keeps it strict too
+    typescript = {
+      implicitProjectConfig = {
+        strictNullChecks = true,
+      },
+    },
+  },
+
+  -- let prettier/conform/etc handle formatting instead
+  on_attach = function(client)
+    client.server_capabilities.documentFormattingProvider = false
+  end,
 })
 
-
 ---------------------------------------------------------------------------
--- (Optional) Neovim Lua config LSP
+-- Neovim Lua config LSP
 ---------------------------------------------------------------------------
 vim.lsp.config("lua_ls", {
   capabilities = cmp_capabilities,
@@ -131,7 +156,12 @@ vim.lsp.config("lua_ls", {
 })
 
 ---------------------------------------------------------------------------
--- Enable the servers (this actually turns them on)
+-- Enable the servers
 ---------------------------------------------------------------------------
-vim.lsp.enable({ "pyright", "rust_analyzer", "lua_ls" })
+vim.lsp.enable({
+  "pyright",
+  "rust_analyzer",
+  "lua_ls",
+  "ts_ls",   -- <- THIS WAS MISSING, so JS/JSX had no LSP
+})
 
