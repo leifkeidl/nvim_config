@@ -1,3 +1,4 @@
+
 -- lua/config/theme.lua
 -- theme choice is saved in a file for persistence on restart
 
@@ -5,9 +6,10 @@ local theme_file = vim.fn.stdpath("config") .. "/lua/config/saved_theme"
 
 -- { colorscheme_name, lualine_theme_name }
 local themes = {
-  { "catppuccin", "catppuccin" },
-  { "gruvbox",    "gruvbox" },
-  { "pywal16",    "pywal16-nvim" },
+  { "monokai-pro", "monokai-pro" }, -- Monokai Pro first in the cycle + default
+  { "catppuccin",  "catppuccin" },
+  { "gruvbox",     "gruvbox" },
+  { "pywal16",     "pywal16-nvim" },
 }
 
 local function find_lualine_theme(colorscheme)
@@ -43,7 +45,7 @@ _G.load_theme = function()
   local file = io.open(theme_file, "r")
   if not file then
     -- fallback default if file doesn't exist
-    apply_theme("catppuccin", "catppuccin")
+    apply_theme("monokai-pro", "monokai-pro")
     return
   end
 
@@ -54,7 +56,7 @@ _G.load_theme = function()
   if colorscheme and colorscheme ~= "" then
     apply_theme(colorscheme, lualine_theme)
   else
-    apply_theme("catppuccin", "catppuccin")
+    apply_theme("monokai-pro", "monokai-pro")
   end
 end
 
@@ -97,4 +99,3 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     end
   end,
 })
-

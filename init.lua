@@ -21,6 +21,7 @@ vim.call('plug#begin')
 Plug('catppuccin/nvim', { ['as'] = 'catppuccin' }) --colorscheme
 Plug('ellisonleao/gruvbox.nvim', { ['as'] = 'gruvbox' }) --colorscheme 2
 Plug('uZer/pywal16.nvim', { [ 'as' ] = 'pywal16' }) --or, pywal colorscheme
+Plug('loctvl842/monokai-pro.nvim') --monokai theme
 Plug('nvim-lualine/lualine.nvim') --statusline
 Plug('nvim-tree/nvim-web-devicons') --pretty icons
 Plug('folke/which-key.nvim') --mappings popup
@@ -56,8 +57,8 @@ Plug('saadparwaiz1/cmp_luasnip')   -- connect cmp to LuaSnip
 Plug('L3MON4D3/LuaSnip')           -- snippets
 Plug('rafamadriz/friendly-snippets') -- prebuilt snippets
 Plug('nvim-telescope/telescope.nvim')
-Plug 'MunifTanjim/nui.nvim' --ascii
-Plug 'MaximilianLloyd/ascii.nvim' --ascii
+Plug 'MunifTanjim/nui.nvim'
+Plug 'MaximilianLloyd/ascii.nvim'
 vim.call('plug#end')
 
 -- move config and plugin config to alternate files

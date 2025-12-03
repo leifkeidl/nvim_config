@@ -1,12 +1,32 @@
--- catppuccin + gruvbox colorscheme configuration
+
+-- monokai-pro + catppuccin + gruvbox colorscheme configuration
+
+-- Monokai Pro: this drives the VSCode-style look
+require("monokai-pro").setup({
+  -- this filter is the closest match to the screenshots you sent
+  filter = "spectrum", -- "pro" | "classic" | "machine" | "octagon" | "ristretto" | "spectrum"
+  transparent_background = false,
+  terminal_colors = true,
+  devicons = true,
+  styles = {
+    comment       = { italic = true },
+    keyword       = { italic = true },
+    type          = { italic = true },
+    storageclass  = { italic = true },
+    structure     = { italic = true },
+    parameter     = { italic = true },
+    annotation    = { italic = true },
+    tag_attribute = { italic = true },
+  },
+})
 
 require("catppuccin").setup({
-	flavour = "frappe",
-	transparent_background = true,
-        styles = {
-           sidebars = "transparent",
-           floats = "transparent",
-        },
+  flavour = "frappe",
+  transparent_background = true,
+  styles = {
+    sidebars = "transparent",
+    floats   = "transparent",
+  },
 })
 
 require("gruvbox").setup({
@@ -34,5 +54,4 @@ require("gruvbox").setup({
 })
 
 -- if you want to get rid of toggling and just set one scheme, you can set here
--- local colorscheme = "catppuccin"
--- vim.cmd('silent! colorscheme catppuccin')
+-- vim.cmd('silent! colorscheme monokai-pro')

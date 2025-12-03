@@ -108,6 +108,16 @@ vim.lsp.config("rust_analyzer", {
 })
 
 ---------------------------------------------------------------------------
+-- JAVASCRIPT / TYPESCRIPT: tsserver (ts_ls)
+---------------------------------------------------------------------------
+vim.lsp.config("ts_ls", {
+  capabilities = cmp_capabilities,
+  -- You can override filetypes if you want, but ts_ls already includes ts/tsx/js/jsx.
+  -- filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+})
+
+
+---------------------------------------------------------------------------
 -- (Optional) Neovim Lua config LSP
 ---------------------------------------------------------------------------
 vim.lsp.config("lua_ls", {
