@@ -1,3 +1,4 @@
+
 -- lua/plugins/lsp.lua
 
 -- capabilities for nvim-cmp
@@ -143,6 +144,15 @@ vim.lsp.config("ts_ls", {
 })
 
 ---------------------------------------------------------------------------
+-- C / C++: clangd
+---------------------------------------------------------------------------
+vim.lsp.config("clangd", {
+  capabilities = cmp_capabilities,
+  cmd = { "clangd" }, -- make sure clangd is installed (on Arch: part of 'clang' package)
+  filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+})
+
+---------------------------------------------------------------------------
 -- Neovim Lua config LSP
 ---------------------------------------------------------------------------
 vim.lsp.config("lua_ls", {
@@ -162,6 +172,6 @@ vim.lsp.enable({
   "pyright",
   "rust_analyzer",
   "lua_ls",
-  "ts_ls",   -- <- THIS WAS MISSING, so JS/JSX had no LSP
+  "ts_ls",
+  "clangd",  -- C / C++
 })
-
