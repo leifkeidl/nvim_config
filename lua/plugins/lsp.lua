@@ -166,6 +166,26 @@ vim.lsp.config("lua_ls", {
 })
 
 ---------------------------------------------------------------------------
+-- JAVA: jdtls
+---------------------------------------------------------------------------
+vim.lsp.config("jdtls", {
+  capabilities = cmp_capabilities,
+  root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", "mvnw", ".git" }, { upward = true })[1]),
+  settings = {
+    java = {
+      signatureHelp = { enabled = true },
+      contentProvider = { preferred = "fernflower" },
+      configuration = { updateBuildConfiguration = "interactive" },
+      inlayHints = { parameterNames = { enabled = "all" } },
+    },
+  },
+  on_attach = function(client)
+    -- let external formatters handle formatting
+    client.server_capabilities.documentFormattingProvider = false
+  end,
+})
+
+---------------------------------------------------------------------------
 -- Enable the servers
 ---------------------------------------------------------------------------
 vim.lsp.enable({
@@ -174,4 +194,5 @@ vim.lsp.enable({
   "lua_ls",
   "ts_ls",
   "clangd",  -- C / C++
+  "jdtls", -- java
 })
